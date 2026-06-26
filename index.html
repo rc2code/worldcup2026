@@ -199,7 +199,7 @@
 </div>
 
 <script>
-// CSV export link from OneDrive (replace with your CSV share link if different)
+// CSV export link 
 const csvUrl = "WorldCupSchedule-2026.csv";
 // Map team names to ISO country codes for flagcdn.com
 const teamToCode = {
@@ -397,7 +397,7 @@ function buildPage(rows) {
 
 // Load PapaParse then CSV
 const papaScript = document.createElement("script");
-papaScript.src = "https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js";
+papaScript.src = "papaparse.min.js";
 papaScript.onload = loadCsv;
 document.body.appendChild(papaScript);
 </script>
