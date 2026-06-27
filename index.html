@@ -33,6 +33,11 @@
         background-color: #d6d6d6;
     }
 
+    .stage-header {
+        user-select: none;
+        cursor: pointer;
+    }
+    
     th {
     position: sticky;
     top: 0;
@@ -260,32 +265,25 @@ function loadCSV() {
 function convertETtoMT(etTime) {
     if (!etTime) return "";
 
-    // Split "7:00 PM" into ["7:00", "PM"]
-    const parts = etTime.trim().split(" ");
-    if (parts.length !== 2) return "";
-
-    const time = parts[0];
-    const ampm = parts[1].toUpperCase();
-
+    // Example ET format: "7:00 PM"
+    const [time, ampm] = etTime.trim().split(" ");
     let [hour, minute] = time.split(":").map(Number);
 
-    // Convert to 24-hour ET
+    // Convert ET to 24-hour
     if (ampm === "PM" && hour !== 12) hour += 12;
     if (ampm === "AM" && hour === 12) hour = 0;
 
-    // Convert ET → MT (subtract 2 hours)
+    // ET → MT (subtract 2 hours)
     hour -= 2;
 
-    // Handle wrap-around
+    // Wrap around midnight
     if (hour < 0) hour += 24;
 
-    // Convert back to 12-hour format
+    // Convert back to 12-hour MT
     const mtAmpm = hour >= 12 ? "PM" : "AM";
     const mtHour = ((hour + 11) % 12) + 1;
 
-    const mtMinute = minute.toString().padStart(2, "0");
-
-    return `${mtHour}:${mtMinute} ${mtAmpm}`;
+    return `${mtHour}:${minute.toString().padStart(2, "0")} ${mtAmpm}`;
 }
   
 // -------------------------
@@ -302,7 +300,7 @@ function renderSchedule(data) {
     stages.forEach(stage => {
         const header = document.createElement("div");
         header.className = "stage-header";
-        header.textContent = stage;
+        header.innerHTML = `<span class="stage-icon">▶</span> ${stage}`;
 
         const content = document.createElement("div");
         content.className = "stage-content";
@@ -374,10 +372,20 @@ function renderSchedule(data) {
         container.appendChild(header);
         container.appendChild(content);
 
-        header.onclick = function () {
-            content.style.display = content.style.display === "none" ? "block" : "none";
-        };    
+       header.onclick = function () {
+            const isOpen = content.style.display === "block";
 
+            // Toggle visibility
+            content.style.display = isOpen ? "none" : "block";
+
+            // Toggle icon rotation
+            if (isOpen) {
+                header.classList.remove("open");
+            } else {
+                header.classList.add("open");
+            }
+        };
+ 
     });
 }
 
