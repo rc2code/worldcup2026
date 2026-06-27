@@ -1,37 +1,76 @@
 <!DOCTYPE html>
+// 20260627 1300
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Cup 2026 Schedule</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .loading {
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        #filterContainer {
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup 2026 Schedule</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+    }
+
+    #filterContainer {
+        margin-bottom: 15px;
+    }
+
+    .stage-header {
+        background-color: #e0e0e0;
+        padding: 10px;
+        cursor: pointer;
+        margin-top: 20px;
+        font-weight: bold;
+        border-radius: 4px;
+    }
+
+    .stage-content {
+        display: none;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 6px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .winner {
+        font-weight: bold;
+        background-color: #d4ffd4;
+    }
+
+    .canada-match {
+        background-color: #e0f0ff;
+    }
+
+    .today-match {
+        background-color: #fff3cd;
+    }
+
+    .loading {
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+</style>
 </head>
+
 <body>
 
 <h1>World Cup 2026 Schedule</h1>
@@ -47,25 +86,7 @@
 
 <div id="loading" class="loading">Loading schedule…</div>
 
-<table id="scheduleTable" style="display:none;">
-    <thead>
-        <tr>
-            <th>Stage</th>
-            <th>Day</th>
-            <th>Date</th>
-            <th>Time (ET)</th>
-            <th>Time (MDT)</th>
-            <th>Team 1</th>
-            <th>Team 1 Score</th>
-            <th>Team 2</th>
-            <th>Team 2 Score</th>
-            <th>Location</th>
-            <th>Watched</th>
-            <th>Network</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+<div id="scheduleContainer"></div>
 
 <script>
 // Load PapaParse locally
@@ -74,58 +95,203 @@ papaScript.src = "papaparse.min.js";
 papaScript.onload = () => loadCSV();
 document.head.appendChild(papaScript);
 
-let fullData = []; // store all rows for filtering
+// -------------------------
+// FLAG MAPPING (Version C)
+// -------------------------
+const teamToCode = {
+    "Canada": "ca",
+    "Mexico": "mx",
+    "South Africa": "za",
+    "Korea Republic": "kr",
+    "Czechia": "cz",
+    "Bosnia-Herzegovina": "ba",
+    "USA": "us",
+    "Qatar": "qa",
+    "Switzerland": "ch",
+    "Brazil": "br",
+    "Morocco": "ma",
+    "Haiti": "ht",
+    "Scotland": "gb-sct",
+    "Australia": "au",
+    "Turkiye": "tr",
+    "Turkey": "tr",
+    "Germany": "de",
+    "Curacao": "cw",
+    "Netherlands": "nl",
+    "Japan": "jp",
+    "Cote d’Ivoire": "ci",
+    "Cote dâ€™Ivoire": "ci",
+    "Cote d' Ivoire": "ci",
+    "Ecuador": "ec",
+    "Sweden": "se",
+    "Tunisia": "tn",
+    "Spain": "es",
+    "Cabo Verde": "cv",
+    "Belgium": "be",
+    "Egypt": "eg",
+    "Saudi Arabia": "sa",
+    "Uruguay": "uy",
+    "Iran": "ir",
+    "New Zealand": "nz",
+    "France": "fr",
+    "Senegal": "sn",
+    "Iraq": "iq",
+    "Norway": "no",
+    "Argentina": "ar",
+    "Algeria": "dz",
+    "Austria": "at",
+    "Jordan": "jo",
+    "Portugal": "pt",
+    "Congo DR": "cd",
+    "England": "gb-eng",
+    "Croatia": "hr",
+    "Ghana": "gh",
+    "Panama": "pa",
+    "Uzbekistan": "uz",
+    "Colombia": "co",
+    "Paraguay": "py"
+};
+
+// Special flags for non‑sovereign regions
+const specialFlags = {
+    "gb-sct": "🏴",
+    "gb-eng": "🏴"
+};
+
+function codeToFlag(code) {
+    if (!code) return "";
+    if (specialFlags[code]) return specialFlags[code];
+
+    if (code.length === 2) {
+        return String.fromCodePoint(
+            0x1F1E6 + (code[0].toUpperCase().charCodeAt(0) - 65),
+            0x1F1E6 + (code[1].toUpperCase().charCodeAt(0) - 65)
+        );
+    }
+    return "";
+}
+
+function getFlag(team) {
+    const code = teamToCode[team];
+    return code ? codeToFlag(code) : "";
+}
+
+// -------------------------
+// CSV LOADING
+// -------------------------
+let fullData = [];
 
 function loadCSV() {
     Papa.parse("WorldCupSchedule-2026.csv", {
         download: true,
         header: true,
         complete: function(results) {
-            fullData = results.data.filter(row => row.Stage); // remove empty rows
-            renderTable(fullData);
-
+            fullData = results.data.filter(r => r.Stage);
+            renderSchedule(fullData);
             document.getElementById("loading").style.display = "none";
-            document.getElementById("scheduleTable").style.display = "table";
         }
     });
 }
 
-function renderTable(data) {
-    const tbody = document.querySelector("#scheduleTable tbody");
-    tbody.innerHTML = ""; // clear existing rows
+// -------------------------
+// RENDERING
+// -------------------------
+function renderSchedule(data) {
+    const container = document.getElementById("scheduleContainer");
+    container.innerHTML = "";
 
-    data.forEach(row => {
-        const tr = document.createElement("tr");
+    const stages = [...new Set(data.map(row => row.Stage))];
 
-        tr.innerHTML = `
-            <td>${row.Stage}</td>
-            <td>${row.Day}</td>
-            <td>${row.Date}</td>
-            <td>${row["Time (ET)"]}</td>
-            <td>${row["Time (MDT)"]}</td>
-            <td>${row["Team 1"]}</td>
-            <td>${row["Team 1 Score"] || ""}</td>
-            <td>${row["Team 2"]}</td>
-            <td>${row["Team 2 Score"] || ""}</td>
-            <td>${row.Location}</td>
-            <td>${row.Watched || ""}</td>
-            <td>${row.Network}</td>
+    const today = new Date().toDateString();
+
+    stages.forEach(stage => {
+        const header = document.createElement("div");
+        header.className = "stage-header";
+        header.textContent = stage;
+
+        const content = document.createElement("div");
+        content.className = "stage-content";
+
+        const table = document.createElement("table");
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Date</th>
+                    <th>Time (ET)</th>
+                    <th>Team 1</th>
+                    <th>Score</th>
+                    <th>Team 2</th>
+                    <th>Score</th>
+                    <th>Location</th>
+                    <th>Watched</th>
+                    <th>Network</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
         `;
 
-        tbody.appendChild(tr);
+        const tbody = table.querySelector("tbody");
+
+        data.filter(r => r.Stage === stage).forEach(row => {
+            const tr = document.createElement("tr");
+
+            const rowDate = new Date(row.Date + " 2026").toDateString();
+            const isToday = rowDate === today;
+            const isCanada = row["Team 1"] === "Canada" || row["Team 2"] === "Canada";
+
+            if (isToday) tr.classList.add("today-match");
+            if (isCanada) tr.classList.add("canada-match");
+
+            const t1Score = row["Team 1 Score"];
+            const t2Score = row["Team 2 Score"];
+
+            let t1Class = "";
+            let t2Class = "";
+
+            if (t1Score && t2Score) {
+                if (parseInt(t1Score) > parseInt(t2Score)) t1Class = "winner";
+                if (parseInt(t2Score) > parseInt(t1Score)) t2Class = "winner";
+            }
+
+            tr.innerHTML = `
+                <td>${row.Day}</td>
+                <td>${row.Date}</td>
+                <td>${row["Time (ET)"]}</td>
+                <td>${getFlag(row["Team 1"])} ${row["Team 1"]}</td>
+                <td class="${t1Class}">${t1Score || ""}</td>
+                <td>${getFlag(row["Team 2"])} ${row["Team 2"]}</td>
+                <td class="${t2Class}">${t2Score || ""}</td>
+                <td>${row.Location}</td>
+                <td>${row.Watched || ""}</td>
+                <td>${row.Network}</td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+
+        content.appendChild(table);
+        container.appendChild(header);
+        container.appendChild(content);
+
+        header.addEventListener("click", () => {
+            content.style.display = content.style.display === "none" ? "block" : "none";
+        });
     });
 }
 
-// Filter logic
+// -------------------------
+// FILTERING
+// -------------------------
 document.getElementById("watchedFilter").addEventListener("change", function() {
     const filter = this.value;
 
     if (filter === "all") {
-        renderTable(fullData);
+        renderSchedule(fullData);
     } else if (filter === "watched") {
-        renderTable(fullData.filter(row => (row.Watched || "").toUpperCase() === "YES"));
+        renderSchedule(fullData.filter(r => (r.Watched || "").toUpperCase() === "YES"));
     } else if (filter === "unwatched") {
-        renderTable(fullData.filter(row => !row.Watched || row.Watched.trim() === ""));
+        renderSchedule(fullData.filter(r => !r.Watched || r.Watched.trim() === ""));
     }
 });
 </script>
