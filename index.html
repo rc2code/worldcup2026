@@ -264,28 +264,36 @@ function loadCSV() {
 // -------------------------
 function convertETtoMT(etTime) {
     if (!etTime) return "";
+    etTime = etTime.trim();
 
-    // Example ET format: "7:00 PM"
-    const [time, ampm] = etTime.trim().split(" ");
+    // Ignore TBD or non-times
+    if (!etTime.match(/\d/)) return "";
+
+    const parts = etTime.split(" ");
+    if (parts.length !== 2) return "";
+
+    const time = parts[0];
+    const ampm = parts[1].toUpperCase();
+
     let [hour, minute] = time.split(":").map(Number);
 
-    // Convert ET to 24-hour
+    if (isNaN(hour) || isNaN(minute)) return "";
+
+    // Convert ET → 24h
     if (ampm === "PM" && hour !== 12) hour += 12;
     if (ampm === "AM" && hour === 12) hour = 0;
 
-    // ET → MT (subtract 2 hours)
+    // ET → MT
     hour -= 2;
-
-    // Wrap around midnight
     if (hour < 0) hour += 24;
 
-    // Convert back to 12-hour MT
+    // Back to 12h
     const mtAmpm = hour >= 12 ? "PM" : "AM";
     const mtHour = ((hour + 11) % 12) + 1;
 
     return `${mtHour}:${minute.toString().padStart(2, "0")} ${mtAmpm}`;
 }
-  
+ 
 // -------------------------
 // RENDERING
 // -------------------------
@@ -300,7 +308,7 @@ function renderSchedule(data) {
     stages.forEach(stage => {
         const header = document.createElement("div");
         header.className = "stage-header";
-        header.innerHTML = `<span class="stage-icon">▶</span> ${stage}`;
+        header.innerHTML = `<span class="stage-icon">▶</span><span class="stage-title">${stage}</span>`;
 
         const content = document.createElement("div");
         content.className = "stage-content";
@@ -375,10 +383,8 @@ function renderSchedule(data) {
        header.onclick = function () {
             const isOpen = content.style.display === "block";
 
-            // Toggle visibility
             content.style.display = isOpen ? "none" : "block";
 
-            // Toggle icon rotation
             if (isOpen) {
                 header.classList.remove("open");
             } else {
