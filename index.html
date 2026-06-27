@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-// Update 20260627 1327
+// Update 20260627 1413
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -27,6 +27,12 @@
         margin-top: 20px;
         font-weight: bold;
         border-radius: 4px;
+    }
+
+    th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
     }
 
     .stage-content {
@@ -74,6 +80,30 @@
         font-size: 1.2em;
         font-weight: bold;
     }
+
+/* Prevent wrapping on mobile */
+    td, th {
+        white-space: nowrap;
+    }
+
+/* Allow horizontal scroll if needed */
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+
+/* Reduce padding on small screens */
+    @media (max-width: 600px) {
+        td, th {
+            padding: 4px;
+            font-size: 12px;
+        }
+        .flag {
+            height: 16px;
+            margin-right: 4px;
+        }
+    }
+    
 </style>
 </head>
 
@@ -90,6 +120,10 @@
     </select>
 </div>
 
+<button id="showTodayBtn" style="margin-left:10px;">Show Today’s Matches</button>
+
+<button id="showAllBtn" style="margin-left:5px;">Show All</button>
+
 <div id="loading" class="loading">Loading schedule…</div>
 
 <div id="scheduleContainer"></div>
@@ -101,6 +135,27 @@ papaScript.src = "papaparse.min.js";
 papaScript.onload = () => loadCSV();
 document.head.appendChild(papaScript);
 
+// -------------------------
+// SHOW ALL MATCHES
+// -------------------------
+document.getElementById("showAllBtn").addEventListener("click", function () {
+    renderSchedule(fullData);
+});
+    
+// -------------------------
+// FILTER TODAY'S MATCHES
+// -------------------------
+document.getElementById("showTodayBtn").addEventListener("click", function () {
+    const today = new Date().toDateString();
+
+    const todaysMatches = fullData.filter(row => {
+        const rowDate = new Date(row.Date + " 2026").toDateString();
+        return rowDate === today;
+    });
+
+    renderSchedule(todaysMatches);
+});
+    
 // -------------------------
 // FLAG MAPPING (Version C)
 // -------------------------
@@ -128,6 +183,7 @@ const teamToCode = {
     "Cote d’Ivoire": "ci",
     "Cote dâ€™Ivoire": "ci",
     "Cote d' Ivoire": "ci",
+    "Ivory Coast": "ci",
     "Ecuador": "ec",
     "Sweden": "se",
     "Tunisia": "tn",
@@ -193,7 +249,26 @@ function loadCSV() {
         }
     });
 }
+    
+// -------------------------
+// CONVERT TO MT
+// -------------------------
+function convertETtoMT(etTime) {
+    if (!etTime) return "";
 
+    // Expecting format like "7:00 PM" or "15:00"
+    let date = new Date(`2026-01-01 ${etTime} ET`);
+    if (isNaN(date)) return "";
+
+    // Convert ET → MT (subtract 2 hours)
+    date.setHours(date.getHours() - 2);
+
+    return date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit"
+    });
+}
+  
 // -------------------------
 // RENDERING
 // -------------------------
@@ -220,6 +295,7 @@ function renderSchedule(data) {
                     <th>Day</th>
                     <th>Date</th>
                     <th>Time (ET)</th>
+                    <th>Time (MT)</th>
                     <th>Team 1</th>
                     <th>Score</th>
                     <th>Team 2</th>
@@ -262,6 +338,7 @@ function renderSchedule(data) {
                 <td>${row.Day}</td>
                 <td>${row.Date}</td>
                 <td>${row["Time (ET)"]}</td>
+                <td>${convertETtoMT(row["Time (ET)"])}</td>
                 <td>${flag1 ? `<img class="flag" src="${flag1}">` : ""}${row["Team 1"]}</td>
                 <td class="${t1Class}">${t1Score || ""}</td>
                 <td>${flag2 ? `<img class="flag" src="${flag2}">` : ""}${row["Team 2"]}</td>
