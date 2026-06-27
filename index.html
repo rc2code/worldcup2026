@@ -29,6 +29,10 @@
         border-radius: 4px;
     }
 
+    .stage-header:hover {
+        background-color: #d6d6d6;
+    }
+
     th {
     position: sticky;
     top: 0;
@@ -256,17 +260,32 @@ function loadCSV() {
 function convertETtoMT(etTime) {
     if (!etTime) return "";
 
-    // Expecting format like "7:00 PM" or "15:00"
-    let date = new Date(`2026-01-01 ${etTime} ET`);
-    if (isNaN(date)) return "";
+    // Split "7:00 PM" into ["7:00", "PM"]
+    const parts = etTime.trim().split(" ");
+    if (parts.length !== 2) return "";
+
+    const time = parts[0];
+    const ampm = parts[1].toUpperCase();
+
+    let [hour, minute] = time.split(":").map(Number);
+
+    // Convert to 24-hour ET
+    if (ampm === "PM" && hour !== 12) hour += 12;
+    if (ampm === "AM" && hour === 12) hour = 0;
 
     // Convert ET → MT (subtract 2 hours)
-    date.setHours(date.getHours() - 2);
+    hour -= 2;
 
-    return date.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit"
-    });
+    // Handle wrap-around
+    if (hour < 0) hour += 24;
+
+    // Convert back to 12-hour format
+    const mtAmpm = hour >= 12 ? "PM" : "AM";
+    const mtHour = ((hour + 11) % 12) + 1;
+
+    const mtMinute = minute.toString().padStart(2, "0");
+
+    return `${mtHour}:${mtMinute} ${mtAmpm}`;
 }
   
 // -------------------------
@@ -355,9 +374,10 @@ function renderSchedule(data) {
         container.appendChild(header);
         container.appendChild(content);
 
-        header.addEventListener("click", () => {
+        header.onclick = function () {
             content.style.display = content.style.display === "none" ? "block" : "none";
-        });
+        };    
+
     });
 }
 
