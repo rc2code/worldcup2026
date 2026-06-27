@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-// 20260627 1300
+// Update 20260627 1327
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -62,6 +62,12 @@
 
     .today-match {
         background-color: #fff3cd;
+    }
+
+    .flag {
+        height: 20px;
+        vertical-align: middle;
+        margin-right: 6px;
     }
 
     .loading {
@@ -152,28 +158,23 @@ const teamToCode = {
     "Paraguay": "py"
 };
 
-// Special flags for non‑sovereign regions
-const specialFlags = {
-    "gb-sct": "🏴",
-    "gb-eng": "🏴"
+// Special flags for non‑sovereign regions (SVG)
+const specialFlagOverrides = {
+    "gb-sct": "https://flagcdn.com/gb-sct.svg",
+    "gb-eng": "https://flagcdn.com/gb-eng.svg"
 };
 
-function codeToFlag(code) {
-    if (!code) return "";
-    if (specialFlags[code]) return specialFlags[code];
-
-    if (code.length === 2) {
-        return String.fromCodePoint(
-            0x1F1E6 + (code[0].toUpperCase().charCodeAt(0) - 65),
-            0x1F1E6 + (code[1].toUpperCase().charCodeAt(0) - 65)
-        );
-    }
-    return "";
-}
-
-function getFlag(team) {
+function getFlagUrl(team) {
     const code = teamToCode[team];
-    return code ? codeToFlag(code) : "";
+    if (!code) return null;
+
+    // Special override for Scotland/England
+    if (specialFlagOverrides[code]) {
+        return specialFlagOverrides[code];
+    }
+
+    // Default SVG flag
+    return `https://flagcdn.com/${code}.svg`;
 }
 
 // -------------------------
@@ -254,13 +255,16 @@ function renderSchedule(data) {
                 if (parseInt(t2Score) > parseInt(t1Score)) t2Class = "winner";
             }
 
+            const flag1 = getFlagUrl(row["Team 1"]);
+            const flag2 = getFlagUrl(row["Team 2"]);
+
             tr.innerHTML = `
                 <td>${row.Day}</td>
                 <td>${row.Date}</td>
                 <td>${row["Time (ET)"]}</td>
-                <td>${getFlag(row["Team 1"])} ${row["Team 1"]}</td>
+                <td>${flag1 ? `<img class="flag" src="${flag1}">` : ""}${row["Team 1"]}</td>
                 <td class="${t1Class}">${t1Score || ""}</td>
-                <td>${getFlag(row["Team 2"])} ${row["Team 2"]}</td>
+                <td>${flag2 ? `<img class="flag" src="${flag2}">` : ""}${row["Team 2"]}</td>
                 <td class="${t2Class}">${t2Score || ""}</td>
                 <td>${row.Location}</td>
                 <td>${row.Watched || ""}</td>
