@@ -363,7 +363,7 @@ function renderSchedule(data) {
                 <td>${row.Day}</td>
                 <td>${row.Date}</td>
                 <td>${row["Time (ET)"]}</td>
-                <td>${convertETtoMT(row["Time (ET)"])}</td>
+                <td>${row["Time (MDT)"] || ""}</td>
                 <td>${flag1 ? `<img class="flag" src="${flag1}">` : ""}${row["Team 1"]}</td>
                 <td class="${t1Class}">${t1Score || ""}</td>
                 <td>${flag2 ? `<img class="flag" src="${flag2}">` : ""}${row["Team 2"]}</td>
