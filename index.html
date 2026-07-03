@@ -351,35 +351,29 @@ function renderSchedule(data) {
             let t1Class = "";
             let t2Class = "";
 
-            // Detect asterisk winner override
-            const t1HasAsterisk = t1.endsWith("*");
-            const t2HasAsterisk = t2.endsWith("*");
+			// Detect asterisk winner override
+			const t1HasAsterisk = t1.endsWith("*");
+			const t2HasAsterisk = t2.endsWith("*");
+			
+			// Strip asterisk for display
+			const cleanT1 = t1HasAsterisk ? t1.slice(0, -1) : t1;
+			const cleanT2 = t2HasAsterisk ? t2.slice(0, -1) : t2;
 
-            // Strip asterisk for display
-            const cleanT1 = t1HasAsterisk ? t1.slice(0, -1) : t1;
-            const cleanT2 = t2HasAsterisk ? t2.slice(0, -1) : t2;
+			// Add penalty indicator to display names
+			const displayT1 = cleanT1 + (t1HasAsterisk ? " ⚽" : "");
+			const displayT2 = cleanT2 + (t2HasAsterisk ? " ⚽" : "");
 
-            // Update displayed team names
-            t1 = cleanT1;
-            t2 = cleanT2;
+			// Winner highlighting logic
+			if (t1HasAsterisk || t2HasAsterisk) {
+				if (t1HasAsterisk) t1Class = "winner";
+				if (t2HasAsterisk) t2Class = "winner";
+			} else {
+				if (t1Score && t2Score) {
+					if (parseInt(t1Score) > parseInt(t2Score)) t1Class = "winner";
+					if (parseInt(t2Score) > parseInt(t1Score)) t2Class = "winner";
+				}
+			}
 
-            // Add penalty indicator
-            if (t1HasAsterisk) t1 += " ⚽";
-            if (t2HasAsterisk) t2 += " ⚽";
-
-            // Winner highlighting logic
-            if (t1HasAsterisk || t2HasAsterisk) {
-                // Asterisk overrides numeric scores
-                if (t1HasAsterisk) t1Class = "winner";
-                if (t2HasAsterisk) t2Class = "winner";
-            } else {
-                // Normal numeric winner logic
-                if (t1Score && t2Score) {
-                    if (parseInt(t1Score) > parseInt(t2Score)) t1Class = "winner";
-                    if (parseInt(t2Score) > parseInt(t1Score)) t2Class = "winner";
-                }
-            }
-            
             const flag1 = getFlagUrl(row["Team 1"]);
             const flag2 = getFlagUrl(row["Team 2"]);
 
