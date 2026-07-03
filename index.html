@@ -352,38 +352,32 @@ function renderSchedule(data) {
             let t2Class = "";
 
             // Detect asterisk winner override
-            const team1HasAsterisk = team1.endsWith("*");
-            const team2HasAsterisk = team2.endsWith("*");
+            const t1HasAsterisk = t1.endsWith("*");
+            const t2HasAsterisk = t2.endsWith("*");
 
             // Strip asterisk for display
-            const cleanTeam1 = team1HasAsterisk ? team1.slice(0, -1) : team1;
-            const cleanTeam2 = team2HasAsterisk ? team2.slice(0, -1) : team2;
+            const cleanT1 = t1HasAsterisk ? t1.slice(0, -1) : t1;
+            const cleanT2 = t2HasAsterisk ? t2.slice(0, -1) : t2;
 
             // Update displayed team names
-            team1Cell.textContent = cleanTeam1;
-            team2Cell.textContent = cleanTeam2;
+            t1 = cleanT1;
+            t2 = cleanT2;
 
-            // Add penalty indicator if needed
-            if (team1HasAsterisk) {
-                team1Cell.textContent += " ⚽";
-            }
-            if (team2HasAsterisk) {
-                team2Cell.textContent += " ⚽";
-            }
+            // Add penalty indicator
+            if (t1HasAsterisk) t1 += " ⚽";
+            if (t2HasAsterisk) t2 += " ⚽";
 
             // Winner highlighting logic
-            if (team1HasAsterisk || team2HasAsterisk) {
-                // Asterisk rule overrides numeric scores
-                if (team1HasAsterisk) {
-                    t1Class = "winner";
-                }
-                if (team2HasAsterisk) {
-                    t2Class = "winner";
-                }
+            if (t1HasAsterisk || t2HasAsterisk) {
+                // Asterisk overrides numeric scores
+                if (t1HasAsterisk) t1Class = "winner";
+                if (t2HasAsterisk) t2Class = "winner";
             } else {
                 // Normal numeric winner logic
-                if (parseInt(t1Score) > parseInt(t2Score)) t1Class = "winner";
-                if (parseInt(t2Score) > parseInt(t1Score)) t2Class = "winner";
+                if (t1Score && t2Score) {
+                    if (parseInt(t1Score) > parseInt(t2Score)) t1Class = "winner";
+                    if (parseInt(t2Score) > parseInt(t1Score)) t2Class = "winner";
+                }
             }
             
             const flag1 = getFlagUrl(row["Team 1"]);
