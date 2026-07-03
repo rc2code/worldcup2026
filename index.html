@@ -351,11 +351,41 @@ function renderSchedule(data) {
             let t1Class = "";
             let t2Class = "";
 
-            if (t1Score && t2Score) {
+            // Detect asterisk winner override
+            const team1HasAsterisk = team1.endsWith("*");
+            const team2HasAsterisk = team2.endsWith("*");
+
+            // Strip asterisk for display
+            const cleanTeam1 = team1HasAsterisk ? team1.slice(0, -1) : team1;
+            const cleanTeam2 = team2HasAsterisk ? team2.slice(0, -1) : team2;
+
+            // Update displayed team names
+            team1Cell.textContent = cleanTeam1;
+            team2Cell.textContent = cleanTeam2;
+
+            // Add penalty indicator if needed
+            if (team1HasAsterisk) {
+                team1Cell.textContent += " ⚽";
+            }
+            if (team2HasAsterisk) {
+                team2Cell.textContent += " ⚽";
+            }
+
+            // Winner highlighting logic
+            if (team1HasAsterisk || team2HasAsterisk) {
+                // Asterisk rule overrides numeric scores
+                if (team1HasAsterisk) {
+                    t1Class = "winner";
+                }
+                if (team2HasAsterisk) {
+                    t2Class = "winner";
+                }
+            } else {
+                // Normal numeric winner logic
                 if (parseInt(t1Score) > parseInt(t2Score)) t1Class = "winner";
                 if (parseInt(t2Score) > parseInt(t1Score)) t2Class = "winner";
             }
-
+            
             const flag1 = getFlagUrl(row["Team 1"]);
             const flag2 = getFlagUrl(row["Team 2"]);
 
@@ -395,48 +425,7 @@ function renderSchedule(data) {
     });
 }
 
-// -----------------------------------
-// HIGHLIGHT PENALTY SHOOTOUT WINNER
-// ----------------------------------
-
-// Detect asterisk winner override
-const team1HasAsterisk = team1.endsWith("*");
-const team2HasAsterisk = team2.endsWith("*");
-
-// Strip asterisk for display
-const cleanTeam1 = team1HasAsterisk ? team1.slice(0, -1) : team1;
-const cleanTeam2 = team2HasAsterisk ? team2.slice(0, -1) : team2;
-
-// Update displayed team names (assuming you have team1Cell / team2Cell)
-team1Cell.textContent = cleanTeam1;
-team2Cell.textContent = cleanTeam2;
-
-// Add penalty indicator if needed
-if (team1HasAsterisk) {
-    team1Cell.textContent += " ⚽";   // visual indicator
-}
-if (team2HasAsterisk) {
-    team2Cell.textContent += " ⚽";   // visual indicator
-}
-
-// Winner highlighting logic
-if (team1HasAsterisk || team2HasAsterisk) {
-    // Asterisk rule overrides numeric scores
-    if (team1HasAsterisk) {
-        team1ScoreCell.classList.add("winner");
-    }
-    if (team2HasAsterisk) {
-        team2ScoreCell.classList.add("winner");
-    }
-} else {
-    // Normal numeric winner logic
-    if (team1Score > team2Score) {
-        team1ScoreCell.classList.add("winner");
-    } else if (team2Score > team1Score) {
-        team2ScoreCell.classList.add("winner");
-    }
-}
-    
+// -------------------------    
 // FILTERING
 // -------------------------
 document.getElementById("watchedFilter").addEventListener("change", function() {
