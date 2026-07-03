@@ -351,6 +351,9 @@ function renderSchedule(data) {
             let t1Class = "";
             let t2Class = "";
 
+			const t1 = row["Team 1"];
+			const t2 = row["Team 2"];
+			
 			// Detect asterisk winner override
 			const t1HasAsterisk = t1.endsWith("*");
 			const t2HasAsterisk = t2.endsWith("*");
