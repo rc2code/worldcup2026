@@ -350,26 +350,31 @@ function renderSchedule(data) {
 
             let t1Class = "";
             let t2Class = "";
+			
+			//-------------------------------------------
+			// WINNER logic
+			//-------------------------------------------
+			
+			// Extract team names directly from row (your code never used t1/t2 variables)
+			const team1 = row["Team 1"];
+			const team2 = row["Team 2"];
 
-			const t1 = row["Team 1"];
-			const t2 = row["Team 2"];
-			
 			// Detect asterisk winner override
-			const t1HasAsterisk = t1.endsWith("*");
-			const t2HasAsterisk = t2.endsWith("*");
-			
+			const team1HasAsterisk = team1.endsWith("*");
+			const team2HasAsterisk = team2.endsWith("*");
+
 			// Strip asterisk for display
-			const cleanT1 = t1HasAsterisk ? t1.slice(0, -1) : t1;
-			const cleanT2 = t2HasAsterisk ? t2.slice(0, -1) : t2;
+			const cleanTeam1 = team1HasAsterisk ? team1.slice(0, -1) : team1;
+			const cleanTeam2 = team2HasAsterisk ? team2.slice(0, -1) : team2;
 
 			// Add penalty indicator to display names
-			const displayT1 = cleanT1 + (t1HasAsterisk ? " ⚽" : "");
-			const displayT2 = cleanT2 + (t2HasAsterisk ? " ⚽" : "");
+			const displayTeam1 = cleanTeam1 + (team1HasAsterisk ? " ⚽" : "");
+			const displayTeam2 = cleanTeam2 + (team2HasAsterisk ? " ⚽" : "");
 
 			// Winner highlighting logic
-			if (t1HasAsterisk || t2HasAsterisk) {
-				if (t1HasAsterisk) t1Class = "winner";
-				if (t2HasAsterisk) t2Class = "winner";
+			if (team1HasAsterisk || team2HasAsterisk) {
+				if (team1HasAsterisk) t1Class = "winner";
+				if (team2HasAsterisk) t2Class = "winner";
 			} else {
 				if (t1Score && t2Score) {
 					if (parseInt(t1Score) > parseInt(t2Score)) t1Class = "winner";
@@ -385,9 +390,9 @@ function renderSchedule(data) {
                 <td>${row.Date}</td>
                 <td>${row["Time (ET)"]}</td>
                 <td>${row["Time (MDT)"] || ""}</td>
-                <td>${flag1 ? `<img class="flag" src="${flag1}">` : ""}${row["Team 1"]}</td>
+                <td>${flag1 ? `<img class="flag" src="${flag1}">` : ""}${displayTeam1}</td>
                 <td class="${t1Class}">${t1Score || ""}</td>
-                <td>${flag2 ? `<img class="flag" src="${flag2}">` : ""}${row["Team 2"]}</td>
+                <td>${flag2 ? `<img class="flag" src="${flag2}">` : ""}${displayTeam2}</td>
                 <td class="${t2Class}">${t2Score || ""}</td>
                 <td>${row.Location}</td>
                 <td>${row.Watched || ""}</td>
