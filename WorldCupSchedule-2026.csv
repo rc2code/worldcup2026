@@ -24,7 +24,7 @@ Group Stage,Wednesday, June 17,4pm,2pm,England,4,Croatia,2,AT&T Stadium (Dallas)
 Group Stage,Wednesday, June 17,7pm,5pm,Ghana,1,Panama,0,BMO Field (Toronto),YES,TSN1/3/4/5/CTV2/Crave
 Group Stage,Wednesday, June 17,10pm,8pm,Uzbekistan,1,Colombia,3,Estadio Banorte (Mexico City),YES,TSN1/3/4/5
 Group Stage,Thursday, June 18,Noon,10am,Czechia,1,South Africa,1,Mercedes-Benz Stadium (Atlanta),YES,TSN1/3/4/5
-Group Stage,Thursday, June 18,3pm,1pm,Switzerland,,Bosnia-Herzegovina,,SoFi Stadium (Los Angeles),YES,TSN1/3/4
+Group Stage,Thursday, June 18,3pm,1pm,Switzerland,4,Bosnia-Herzegovina,1,SoFi Stadium (Los Angeles),YES,TSN1/3/4
 Group Stage,Thursday, June 18,6pm,4pm,Canada,6,Qatar,0,BC Place (Vancouver),YES,TSN1/3/4/5/CTV/Crave
 Group Stage,Thursday, June 18,9pm,7pm,Mexico,1,Korea Republic,0,Estadio Akron (Guadalajara),YES,TSN1/3/4/5
 Group Stage,Friday, June 19,3pm,1pm,USA,2,Australia,0,Lumen Field (Seattle),,TSN1/3/4
@@ -72,23 +72,23 @@ Group Stage,Saturday, June 27,7:30pm,5:30pm,Congo DR,3,Uzbekistan,1,Mercedes-Ben
 Group Stage,Saturday, June 27,10pm,8pm,Algeria,3,Austria,3,GEHA Field at Arrowhead Stadium (KC),,TSN2
 Group Stage,Saturday, June 27,10pm,8pm,Jordan,1,Argentina,3,AT&T Stadium (Dallas),,TSN1/4/5/CTV/Crave
 Round of 32,Sunday, June 28,3pm,1pm,South Africa,0,Canada,1,SoFi Stadium (LA),YES,TSN1/3/4/CTV/Crave
-Round of 32,Monday, June 29,1pm,11am,Brazil,,Japan,,NRG Stadium (Houston),,TSN1/3/4
-Round of 32,Monday, June 29,4:30pm,2:30pm,Germany,,Paraguay,,Gilette Stadium (Boston),,TSN1/3/4
-Round of 32,Monday, June 29,9pm,7pm,Netherlands,,Morocco,,Estadio BBVA (Monterrey),,TSN1/3/4/5
-Round of 32,Tuesday, June 30,1pm,11am,Ivory Coast,,Norway,,AT&T Stadium (Dallas),,TSN1/3/4
-Round of 32,Tuesday, June 30,5pm,3pm,France,,Sweden,,Metlife Stadium (NY/NJ),,TSN1/3/4/5
-Round of 32,Tuesday, June 30,9pm,7pm,Mexico,,Ecuador,,Estadio Banorte (Mexico City),,TSN1/3/4/5
-Round of 32,Wednesday, July 1,Noon,10am,England,,Congo DR,,Mercedes-Benz Stadium (Atlanta),,TSN1/4/CTV/Crave
-Round of 32,Wednesday, July 1,4pm,2pm,Belgium,,Senegal,,Lumen Field (Seattle),,TSN1/3/4/CTV/Crave
-Round of 32,Wednesday, July 1,8pm,6pm,USA,,Bosnia-Herzegovina,,Levi's Stadium (San Francisco),,TSN1/3/4/CTV/Crave
+Round of 32,Monday, June 29,1pm,11am,Brazil,2,Japan,1,NRG Stadium (Houston),YES,TSN1/3/4
+Round of 32,Monday, June 29,4:30pm,2:30pm,Germany,1 (3),Paraguay*,1 (4),Gilette Stadium (Boston),YES,TSN1/3/4
+Round of 32,Monday, June 29,9pm,7pm,Netherlands,1 (2),Morocco*,1 (3),Estadio BBVA (Monterrey),YES,TSN1/3/4/5
+Round of 32,Tuesday, June 30,1pm,11am,Ivory Coast,1,Norway,2,AT&T Stadium (Dallas),YES,TSN1/3/4
+Round of 32,Tuesday, June 30,5pm,3pm,France,3,Sweden,0,Metlife Stadium (NY/NJ),YES,TSN1/3/4/5
+Round of 32,Tuesday, June 30,9pm,7pm,Mexico,2,Ecuador,0,Estadio Banorte (Mexico City),NO,TSN1/3/4/5
+Round of 32,Wednesday, July 1,Noon,10am,England,2,Congo DR,1,Mercedes-Benz Stadium (Atlanta),YES,TSN1/4/CTV/Crave
+Round of 32,Wednesday, July 1,4pm,2pm,Belgium,3,Senegal,2,Lumen Field (Seattle),YES,TSN1/3/4/CTV/Crave
+Round of 32,Wednesday, July 1,8pm,6pm,USA,2,Bosnia-Herzegovina,0,Levi's Stadium (San Francisco),YES,TSN1/3/4/CTV/Crave
 Round of 32,Thursday, July 2,3pm,1pm,Spain,,Austria,,SoFi Stadium (LA),,TSN1/4
 Round of 32,Thursday, July 2,7pm,5pm,Portugual,,Croatia,,BMO Field (Toronto),,TSN1/4/5/CTV/Crave
 Round of 32,Thursday, July 2,11pm,9pm,Switzerland,,Algeria,,BC Place (Vancouver),,TSN1/4/5/CTV/Crave
 Round of 32,Friday, July 3,2pm,12pm,Australia,,Egypt,,AT&T Stadium (Dallas),,TSN1/4
 Round of 32,Friday, July 3,6pm,4pm,Argentina,,Cape Verde,,Hard Rock Stadium (Miami),,TSN1/4/5
 Round of 32,Friday, July 3,9:30pm,7:30pm,Colombia,,Ghana,,GEHA Field at Arrowhead Stadium (KC),,TSN1/4/5
-Round of 16,Saturday, July 4,1pm,11am,Canada,,W75,,NRG Stadium (Houston),,TSN1/4/CTV/Crave
-Round of 16,Saturday, July 4,5pm,3pm,W74,,W77,,Lincoln Financial Field (Philadelphia),,TSN1/3/4/CTV/Crave
+Round of 16,Saturday, July 4,1pm,11am,Canada,,Morocco,,NRG Stadium (Houston),,TSN1/4/CTV/Crave
+Round of 16,Saturday, July 4,5pm,3pm,Paraguay,,France,,Lincoln Financial Field (Philadelphia),,TSN1/3/4/CTV/Crave
 Round of 16,Sunday, July 5,4pm,2pm,W76,,W78,,Metlife Stadium (NY/NJ),,TSN1/3/4/CTV/Crave
 Round of 16,Sunday, July 5,8pm,6pm,W79,,W80,,Estadio Banorte (Mexico City),,TSN1/4
 Round of 16,Monday, July 6,3pm,1pm,W83,,W84,,AT&T Stadium (Dallas),,TSN1/3/4
@@ -97,7 +97,7 @@ Round of 16,Tuesday, July 7,Noon,10am,W86,,W88,,Mercedes-Benz Stadium (Atlanta),
 Round of 16,Tuesday, July 7,4pm,2pm,W85,,W87,,BC Place (Vancouver),,TSN1/3/4/5/CTV/Crave
 Quarterfinals,Thursday, July 9,4pm,2pm,W89,,W90,,Gilette Stadium (Boston),,TSN1/3/4/5/CTV/Crave
 Quarterfinals,Friday, July 10,3pm,1pm,W93,,W94,,SoFi Stadium (LA),,TSN1/3/4/5/CTV/Crave
-Quarterfinals,Saturday, July 11,5pm,3pm,W91,,W92,,Hard Rock Stadium (Miami),,TSN1/3/4/5/CTV/Crave
+Quarterfinals,Saturday, July 11,5pm,3pm,Brazil,,Japan,,Hard Rock Stadium (Miami),,TSN1/3/4/5/CTV/Crave
 Quarterfinals,Saturday, July 11,9pm,7pm,W95,,W96,,GEHA Field at Arrowhead Stadium (KC),,TSN1/3/4/CTV/Crave
 Semifinals,Tuesday, July 14,3pm,1pm,W98,,W97,,AT&T Stadium (Dallas),,TSN1/3/4/5/CTV/Crave
 Semifinals,Wednesday, July 15,3pm,1pm,W100,,W99,,Mercedes-Benz Stadium (Atlanta),,TSN1/3/4/5/CTV/Crave
